@@ -4,12 +4,18 @@
 </template>
 
 <script>
+/* eslint-disable */
 import HelloWorld from './components/HelloWorld.vue'
-
+import {initializeApp} from 'firebase/app'
+import firebaseConfig from './config/firebaseConfig'
 export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+
+  mounted() {
+    const firebaseApp = initializeApp(firebaseConfig)
   }
 }
 </script>
