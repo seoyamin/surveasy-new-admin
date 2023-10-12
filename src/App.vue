@@ -2,8 +2,8 @@
   <h1>서베이지 어드민 페이지</h1>
   <div class="AdminMain-menu-web">
     <router-link to="/adminmain"><div id="menu-detail-item">메인</div></router-link> 
-    <router-link to="/adminorder"><div id="menu-detail-item">주문</div></router-link>
-    <router-link to="/adminmain/adminwebcoupon"><div id="menu-detail-item">쿠폰 관리</div></router-link>
+    <!-- <router-link to="/adminorder"><div id="menu-detail-item">주문</div></router-link> -->
+    <router-link to="/adminpanel"><div id="menu-detail-item">패널 관리</div></router-link>
   </div>
   <router-view></router-view>
 </template>
