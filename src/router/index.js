@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AdminMain from '../view/AdminMainView.vue'
 import AdminOrder from '../view/AdminOrderView.vue'
 import AdminPanel from '../view/AdminPanelView.vue'
+import AdminCoupon from '../view/AdminCoupon.vue'
 const routes = [
   {
     path:'/adminmain',
@@ -17,6 +18,12 @@ const routes = [
     path:'/adminpanel',
     name: 'AdminPanel',
     component: AdminPanel
+  },
+  
+  {
+    path: '/admincoupon',
+    name: 'AdminCoupon',
+    component: AdminCoupon
   }
 ]
 
