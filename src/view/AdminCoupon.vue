@@ -21,6 +21,8 @@
               <th>할인율</th>
               <th>발급 일자</th>
               <th>상태</th>
+              <th>편집</th>
+              <th>삭제</th>
             </tr>
 
             <tr v-for="item in this.couponList" :key="item.id" class="cou-tds">
@@ -29,6 +31,8 @@
               <td>{{ item.discountPercent }}</td>
               <td>{{ item.createdAt }}</td>
               <td>{{ item.status }}</td>
+              <td>편집</td>
+              <td @click="deleteCoupon(item.id)" id="delete">삭제</td>
             
             </tr>
           </table>
@@ -54,24 +58,6 @@ export default {
       },
 
       couponList: [],
-
-      couponNum: 1,
-
-      localCode: '',
-      couponUser: { user: '', used: false },
-
-      selectedCoupon: {
-        code: '',
-        rate: 0
-      },
-      price: 10000,
-
-      receiver: '',
-      transferCoupon: {
-        code: '',
-      },
-
-      uploadDate: '',
 
     }
   },
@@ -102,6 +88,44 @@ export default {
             discountPercent : this.couponInfo.rate
           }
         )
+        this.$router.go("/admincoupon")
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async deleteCoupon(id){
+      try {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          const response = await axios.delete(`http://3.39.170.7/coupon/${id}`)
+          if (response.status == 200) {
+            if (confirm("삭제되었습니다.")) {
+              this.$router.go("/admincoupon")
+            }
+          } else {
+            if (confirm("삭제에 실패하였습니다. 다시 시도해주세요.")) {
+              this.$router.go("/admincoupon")
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async editSurvey() {
+      try {
+        await axios.patch(
+          `http://3.39.170.7/survey/mypage/edit/${this.editTarget.id}`,
+          {
+            title: this.modalTitle,
+            link: this.modalLink,
+            headCount: this.modalHeadCount,
+            price: this.updatePrice
+          }
+        )
+        this.editModal = false
+        this.$router.go("/mypage/order")
       } catch (error) {
         console.log(error)
       }
@@ -211,6 +235,11 @@ export default {
 
 .cou-tds {
   color: rgb(0, 0, 0);
+}
+
+#delete{
+  cursor: pointer;
+  color: red;
 }
 
 .cou-tds.group {
