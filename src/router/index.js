@@ -19,11 +19,20 @@ const routes = [
     name: 'AdminPanel',
     component: AdminPanel
   },
-  
   {
     path: '/admincoupon',
     name: 'AdminCoupon',
     component: AdminCoupon
+  },
+  {
+    path: '/surveyDetail/:id',
+    name: 'SurveyDetail',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../view/SurveyDetail.vue'),
+    // true로 설정하면 데이터를 props로도 받습니다.
+    props: true,
   }
 ]
 
