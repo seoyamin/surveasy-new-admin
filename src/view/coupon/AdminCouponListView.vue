@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div>coupone admin view</div>
+    <div class="admin-view-title">쿠폰 관리</div>
       <div class="coupon">
-        <div class="coupon-register">
-          <h2>쿠폰 발급</h2>
+        <div class="coupon-register-container">
+          <div id="coupon-register-title">쿠폰 발급</div>
           <input v-model="couponInfo.code" type="text" placeholder="쿠폰코드 " id="couponInput">
             <br>
           <input v-model="couponInfo.rate" type="text" placeholder="할인율 " id="couponInput">
@@ -12,16 +12,15 @@
         </div>
 
 
-        <div class="coupon-list">
-          <h2>쿠폰 리스트</h2>
-          <table>
+        <div class="coupon-list-container">
+          <table class="admin-view-table">
             <tr>
-              <th>쿠폰 id</th>
-              <th>쿠폰 코드</th>
-              <th>할인율</th>
+              <th>id</th>
+              <th>코드</th>
+              <th>할인율 (%)</th>
               <th>발급 일자</th>
               <th>상태</th>
-              <th>편집</th>
+              <th>수정</th>
               <th>삭제</th>
             </tr>
 
@@ -31,7 +30,7 @@
               <td>{{ item.discountPercent }}</td>
               <td>{{ item.createdAt }}</td>
               <td>{{ item.status }}</td>
-              <td @click="openModel(item)" id="edit">편집</td>
+              <td @click="openModel(item)" id="edit">수정하기</td>
               <td @click="deleteCoupon(item.id)" id="delete">삭제</td>
             
             </tr>
@@ -40,7 +39,7 @@
     </div>
 
 
-    <!-- 설문 수정 모달창 -->
+    <!-- 쿠폰 수정 모달창 -->
       <div v-if="editModal == true" class="edit-modal">
         <div class="edit-contentsbox">
           <div id="edit-top">
@@ -53,7 +52,7 @@
             <div id="detail-title">쿠폰 코드</div>
               <input class="modal-input" type="text" v-model="editInfo.code">
             
-            <div id="detail-title">쿠폰 rate</div>
+            <div id="detail-title">쿠폰 할인율</div>
               <input class="modal-input" type="text" v-model="editInfo.discountPercent">
             
             <div id="detail-title">쿠폰 상태</div>
@@ -99,6 +98,14 @@ export default {
   },
 
   methods: {
+    async getCouponList(){
+      try {
+        const response = await axios.get("https://gosurveasy.co.kr/coupon")
+        this.couponList = response.data.couponList
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
     closeModal() {
       this.editModal = false
@@ -109,16 +116,7 @@ export default {
       this.editInfo = item
     },
 
-    async getCouponList(){
-      try {
-        const response = await axios.get("https://gosurveasy.co.kr/coupon")
-        this.couponList = response.data.couponList
-        console.log(response.data.surveyList)
-      } catch (error) {
-        console.log(error)
-      }
-        
-    },
+    
 
     async addCoupon(){
       try {
@@ -180,98 +178,52 @@ export default {
 .coupon {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  margin: 50px;
+  padding: 0 20px 0 20px
 }
-
-.coupon-register {
-  margin: 80px;
+.coupon-register-container {
+  margin: 0 50px 0 50px;
+  padding: 30px;
+  border: 2px solid green;
+  border-radius: 20px;
+  background: #dff2dd;
 }
-
-.coupon-type button {
-  width: 100px;
-  margin-top: 15px;
-  margin-left: 30px;
-  margin-right: 30px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.coupon-type .active_green {
-  width: 100px;
-  margin-left: 30px;
-  margin-right: 30px;
-  background: none;
-  border: none;
-  font-weight: bolder;
-  font-size: 17px;
-  color: rgb(126, 209, 66);
-  cursor: pointer;
-}
-
-.coupon-line {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  border-style: inset;
-  border-width: 2px;
-  background: rgb(26, 226, 26);
-}
-
-#couponInput_num {
-  width: 100px;
-  height: 30px;
-  margin-top: 5px;
-  font-size: 15px;
-}
-
-#couponInput {
-  width: 300px;
-  height: 30px;
+#coupon-register-title {
+  font-size: 20px;
+  font-weight: bold;
   margin-bottom: 20px;
-  font-size: 13px;
+  color: green;
 }
-
-.coupon-register select {
-  width: 80px;
-  height: 30px;
-  margin-left: 20px;
-  font-size: 15px;
-}
-
-.finBtn {
-  margin: 20px;
-  width: 200px;
+#couponInput {
+  width: 90%;
   height: 40px;
-  background-color: rgb(191, 243, 172);
-  border: 1px solid grey;
-  border-radius: 15px;
+  margin-bottom: 20px;
+  padding: 5px;
+  font-size: 17px;
+  border: 2px solid green;
+  border-radius: 10px;
+}
+.finBtn {
+  width: 90%;
+  height: 40px;
+  background-color: white;
+  border: 2px solid green;
+  border-radius: 40px;
   font-size: 16px;
   font-weight: bold;
+  color: green;
   cursor: pointer;
 }
-
-.coupon-list {
-  margin: 20px;
-  font-size: 13px;
+.finBtn:hover{
+  color: white;
+  background: green;
+}
+.coupon-list-container {
+  width: 100%;
 }
 
-.coupon-list th {
+.coupon-list-container th {
   font-size: 17px;
   font-weight: bold;
-}
-
-.coupon-mypage {
-  margin: 20px;
-}
-
-.coupon-use {
-  margin: 20px;
-}
-
-.coupon-use input {
-  width: 260px;
 }
 
 .cou-tds {
@@ -303,8 +255,7 @@ export default {
   flex-direction: column;
   padding: 20px 40px;
   font-family: 'Noto Sans KR', sans-serif;
-  width: 600px;
-  height: 560px;
+  width: 30%;
   margin: 120px auto;
   padding-top: 15px;
   padding-bottom: 30px;
@@ -314,27 +265,13 @@ export default {
   transition: all .3s ease;
   z-index: 2;
 }
-#edit-container-price {
-  text-align: right;
-}
-#edit-container-price-diff {
-  text-align: center;
-  color: #0AAB00;
-}
-#edit-container-price-after {
-  padding: 3px;
-  font-size: 20px;
-  text-align: center;
-  background: #0AAB00;
-  color: #FFFFFF;
-}
 .edit-title {
   text-align: center;
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 23px;
   font-weight: bold;
   margin-bottom: 9px;
-  color: #0CAE02;
+  color: green;
 }
 .edit-close {
   display: flex;
@@ -345,25 +282,17 @@ export default {
 }
 #detail-title {
   font-size: 16px;
-  color: #000000;
+  color: #494949;
   text-align: left;
-  margin: 5px;
-}
-#container-link-btn {
-  display: flex;
-  justify-content: right;
-}
-#link-btn {
-  border: 0;
-  font-size: 15px;
-  color: #0CAE02;
+  font-weight: bold;
+  margin: 10px;
 }
 #edit-fin-btn {
-  padding: 7px;
+  padding: 7px 15px 7px 15px;
   margin: 15px 0px 0px 0px;
-  color:#0CAE02;
+  color: green;
   background-color: #FFFFFF;
-  border: 1.5px solid #0CAE02;
+  border: 1.5px solid green;
   border-radius: 10px;
   font-size: 0.9rem;
   cursor: pointer;
@@ -371,7 +300,7 @@ export default {
 }
 #edit-fin-btn:hover{
   color: white;
-  background: #0AAB00;
+  background: green;
 }
 
 .modal-input {

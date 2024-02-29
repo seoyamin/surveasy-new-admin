@@ -1,38 +1,49 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AdminMain from '../view/AdminMainView.vue'
-import AdminOrder from '../view/AdminOrderView.vue'
-import AdminPanel from '../view/AdminPanelView.vue'
-import AdminCoupon from '../view/AdminCoupon.vue'
+import AdminSurvey from '../view/survey/AdminSurveyListView.vue'
+import AdminSurveyOrder from '../view/survey/AdminSurveyOrderListView.vue'
+import AdminPanel from '../view/panel/AdminPanelListView.vue'
+import AdminCoupon from '../view/coupon/AdminCouponListView.vue'
+
 const routes = [
   {
-    path:'/adminmain',
-    name: 'AdminMain',
-    component: AdminMain
+    path:'/admin/survey/order',
+    name: 'AdminSurveyOrder',
+    component: AdminSurveyOrder
   },
   {
-    path:'/adminorder',
-    name: 'AdminOrder',
-    component: AdminOrder
+    path:'/admin/survey',
+    name: 'AdminSurvey',
+    component: AdminSurvey
   },
   {
-    path:'/adminpanel',
+    path: '/admin/survey/:id',
+    name: 'AdminSurveyDetail',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../view/survey/AdminSurveyDetailView.vue'),
+    // true로 설정하면 데이터를 props로도 받습니다.
+    props: true,
+  },
+  {
+    path: '/admin/survey/:id/response',
+    name: 'AdminResponseList',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../view/response/AdminResponseList.vue'),
+    // true로 설정하면 데이터를 props로도 받습니다.
+    props: true,
+  },
+  {
+    path:'/admin/panel',
     name: 'AdminPanel',
     component: AdminPanel
   },
   {
-    path: '/admincoupon',
+    path: '/admin/coupon',
     name: 'AdminCoupon',
     component: AdminCoupon
-  },
-  {
-    path: '/surveyDetail/:id',
-    name: 'SurveyDetail',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../view/SurveyDetail.vue'),
-    // true로 설정하면 데이터를 props로도 받습니다.
-    props: true,
   }
 ]
 
@@ -40,7 +51,6 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-  
 })
 
 
