@@ -1,23 +1,43 @@
 <template>
-  <h1>서베이지 어드민 페이지</h1>
-  <div class="AdminMain-menu-web">
-    <router-link to="/adminmain"><div id="menu-detail-item">메인</div></router-link> 
-    <!-- <router-link to="/adminorder"><div id="menu-detail-item">주문</div></router-link> -->
-    <router-link to="/adminpanel"><div id="menu-detail-item">패널 관리</div></router-link>
-    <router-link to="/admincoupon"><div id="menu-detail-item">쿠폰 관리</div></router-link>
+  <div id="admin-main">
+    <div id="admin-main-navigator">
+      <div id="admin-main-logo">
+        <router-link to="/"><img src="./logo.png" id="admin-main-logo-img"></router-link>
+        
+      </div>
+        <div class="admin-main-navigator-item">
+          <div id="admin-main-navigator-item-title">Survey</div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/survey/order">주문 관리</router-link></div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/survey">설문 관리</router-link></div>
+        </div>
+        <div class="admin-main-navigator-item">
+          <div id="admin-main-navigator-item-title">Panel</div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/panel">패널 관리</router-link></div>
+        </div>
+        <div class="admin-main-navigator-item">
+          <div id="admin-main-navigator-item-title">Coupon</div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/coupon">쿠폰 관리</router-link></div>
+        </div>
+        <div class="admin-main-navigator-item">
+          <div id="admin-main-navigator-item-title">Review</div>
+          <div id="admin-main-navigator-item-option"><router-link to="/">리뷰 관리</router-link></div>
+        </div>
+      </div>
+    <div id="admin-main-container">
+      <router-view></router-view>
+    </div>
   </div>
-  <router-view></router-view>
 </template>
 
 <script>
 /* eslint-disable */
-import AdminMainView from './view/AdminMainView.vue'
+import AdminSurvey from './view/survey/AdminSurveyListView.vue'
 import {initializeApp} from 'firebase/app'
 import firebaseConfig from './config/firebaseConfig'
 export default {
   name: 'App',
   components: {
-    AdminMainView
+    AdminSurvey
   },
 
   mounted() {
@@ -31,23 +51,67 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: auto;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
-
-.AdminMain-menu-web {
+#admin-main {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding-right: 300px;
-  padding-left: 300px;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
 }
-
-#menu-detail-item {
-  margin-left: 15px;
-  margin-right: 15px;
-  font-size:17px; 
-  font-weight:bold; 
+#admin-main-navigator {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgb(244, 254, 244);
+  text-align: left;
+  padding: 20px;
+}
+#admin-main-logo-img {
+  width: 150px;
+  margin-bottom: 20px;
+}
+.admin-main-navigator-item {
+  margin: 20px 0 20px 0;
+}
+#admin-main-navigator-item-title {
+  font-size: 20px;
+  color: #0AAC00;
+  border-bottom: 1px solid #0AAC00;
+}
+#admin-main-navigator-item-option {
+  font-size: 17px;
+  margin-top: 10px;
+}
+.admin-main-navigator-item a {
+  font-weight: lighter;
+  color: #a4a4a4;
+  text-decoration: none;
+}
+.admin-main-navigator-item a.router-link-exact-active {
+  font-weight: bold;
+  color: #000000;
+}
+#admin-main-container {
+  width: 100%;
+  align-items: center;
+}
+.admin-view-table {
+  width: 100%;
+  border: 1px solid #444444;
+  border-collapse: collapse;
+}
+.admin-view-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: green;
+  padding: 30px;
+  background: white;
 }
 </style>
