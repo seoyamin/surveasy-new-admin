@@ -5,7 +5,7 @@
     <!-- <select v-model="this.$store.state.surveyprogressmap">
               <option v-for="(item, index) in progressMap" :key="index" :value="item.value">{{item.name}}</option>
             </select> -->
-    <button @click="openModal()">수정하기</button>
+    <!-- <button @click="openModal()">수정하기</button> -->
         <!-- Modal -->
     <div class="modal" v-if="isModalOpen">
       <div class="modal-content">
