@@ -9,6 +9,7 @@
           <div id="admin-main-navigator-item-title">Survey</div>
           <div id="admin-main-navigator-item-option"><router-link to="/admin/survey/order">주문 관리</router-link></div>
           <div id="admin-main-navigator-item-option"><router-link to="/admin/survey">설문 관리</router-link></div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/response">정산 관리</router-link></div>
         </div>
         <div class="admin-main-navigator-item">
           <div id="admin-main-navigator-item-title">Panel</div>
@@ -20,7 +21,7 @@
         </div>
         <div class="admin-main-navigator-item">
           <div id="admin-main-navigator-item-title">Review</div>
-          <div id="admin-main-navigator-item-option"><router-link to="/">리뷰 관리</router-link></div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/review">리뷰 관리</router-link></div>
         </div>
       </div>
     <div id="admin-main-container">
