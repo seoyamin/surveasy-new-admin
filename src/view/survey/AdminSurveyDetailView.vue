@@ -172,17 +172,6 @@ export default {
   },
 
   methods : {
-    // async querySurveyDetail(id) {
-    //   try {
-    //     const response = await axios.get(`http://3.39.170.7/survey/app/${id}`)
-    //     console.log(response.data)
-    //     this.survey = response.data
-
-    //   } catch(err) {
-    //     console.log(err)
-    //   }
-    // }
-
     openModal() {
       this.isModalOpen = true;
     },

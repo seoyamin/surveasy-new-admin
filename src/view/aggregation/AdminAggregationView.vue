@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -102,8 +101,8 @@ export default {
   methods: {
     async downloadCsv() {
       try {
-        await axios.get(
-          `https://gosurveasy.co.kr/response/admin/download/` + (new Date()).toISOString().substring(0, 10) + ".csv"
+        await this.axios.get(
+          `/response/admin/download/` + (new Date()).toISOString().substring(0, 10) + ".csv"
         )
       } catch(err) {
         console.log(err)
@@ -112,18 +111,9 @@ export default {
       
     },
     async doneAggregation() {
-      await axios.get(
-          `https://gosurveasy.co.kr/response/admin/done`
+      await this.axios.get(
+          `/response/admin/done`
         ).then(alert('정산 완료 처리되었습니다'))
-    },
-
-    async getCouponList(){
-      try {
-        const response = await axios.get("https://gosurveasy.co.kr/coupon")
-        this.couponList = response.data.couponList
-      } catch (error) {
-        console.log(error)
-      }
     },
 
     closeModal() {
@@ -133,62 +123,7 @@ export default {
     openModel(item){
       this.editModal = true
       this.editInfo = item
-    },
-
-    
-
-    async addCoupon(){
-      try {
-        await axios.post(
-          'https://gosurveasy.co.kr/coupon',
-          {
-            code : this.couponInfo.code.toString(),
-            discountPercent : this.couponInfo.rate
-          }
-        )
-        this.$router.go("/admincoupon")
-      } catch (error) {
-        console.log(error)
-      }
-    },
-
-    async deleteCoupon(id){
-      try {
-        if (confirm("정말 삭제하시겠습니까?")) {
-          const response = await axios.delete(`https://gosurveasy.co.kr/coupon/${id}`)
-          if (response.status == 200) {
-            if (confirm("삭제되었습니다.")) {
-              this.$router.go("/admincoupon")
-            }
-          } else {
-            if (confirm("삭제에 실패하였습니다. 다시 시도해주세요.")) {
-              this.$router.go("/admincoupon")
-            }
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-
-    async editCoupon() {
-      try {
-        console.log(this.editInfo)
-        await axios.patch(
-          `https://gosurveasy.co.kr/coupon/${this.editInfo.id}`,
-          {
-            code : this.editInfo.code,
-            discountPercent : this.editInfo.discountPercent,
-            status : this.editInfo.status
-          }
-        )
-        this.editModal = false
-        this.$router.go("/admincoupon")
-      } catch (error) {
-        console.log(error)
-      }
-    },
-
+    }
   }
 }
 </script>

@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data(){
     return {
@@ -62,7 +61,7 @@ export default {
     async listAdminSurveys(){
       console.log('listAdminSurveys')
       try{
-        const response = await axios.get("https://gosurveasy.co.kr/survey/admin?page=0")
+        const response = await this.axios.get("/survey/admin?page=0")
         this.surveyList = response.data.surveyList
         this.totalPages = response.data.pageInfo.totalPages
       }catch(error) {
@@ -72,7 +71,7 @@ export default {
     
     async loadMoreSurveys(i) {
       try {
-        const response = await axios.get("https://gosurveasy.co.kr/survey/admin?page=" + i)
+        const response = await this.axios.get("/survey/admin?page=" + i)
         this.surveyList = response.data.surveyList
       } catch(err) {
         console.log(err)
@@ -83,7 +82,7 @@ export default {
       console.log('updateSurvey', progress)
       
       try {
-        const response = await axios.patch(`https://gosurveasy.co.kr/survey/admin/${id}`,{
+        const response = await this.axios.patch(`/survey/admin/${id}`,{
           progress : progress,
           noticeToPanel : "",
           reward : 0,

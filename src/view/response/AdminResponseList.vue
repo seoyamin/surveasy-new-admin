@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data(){
     return {
@@ -26,7 +25,7 @@ export default {
     async listResponseList() {
       try {
         console.log("fetch responses")
-        const response = await axios.get("https://gosurveasy.co.kr/response/admin/" + this.$route.params.id)
+        const response = await this.axios.get("/response/admin/" + this.$route.params.id)
         this.responseList = response.data.responseList
       } catch(error) {
         console.log(error)
@@ -35,8 +34,8 @@ export default {
 
     async updateResponseWrong(responseId, index) {
       try {
-        await axios.patch(
-          "https://gosurveasy.co.kr/response/admin/" + responseId,
+        await this.axios.patch(
+          "/response/admin/" + responseId,
           { status : "WRONG" }
         )
         var response = this.responseList[index]
