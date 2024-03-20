@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -100,7 +99,7 @@ export default {
   methods: {
     async getCouponList(){
       try {
-        const response = await axios.get("https://gosurveasy.co.kr/coupon")
+        const response = await this.axios.get("/coupon")
         this.couponList = response.data.couponList
       } catch (error) {
         console.log(error)
@@ -120,8 +119,8 @@ export default {
 
     async addCoupon(){
       try {
-        await axios.post(
-          'https://gosurveasy.co.kr/coupon',
+        await this.axios.post(
+          '/coupon',
           {
             code : this.couponInfo.code.toString(),
             discountPercent : this.couponInfo.rate
@@ -136,7 +135,7 @@ export default {
     async deleteCoupon(id){
       try {
         if (confirm("정말 삭제하시겠습니까?")) {
-          const response = await axios.delete(`https://gosurveasy.co.kr/coupon/${id}`)
+          const response = await this.axios.delete(`/coupon/${id}`)
           if (response.status == 200) {
             if (confirm("삭제되었습니다.")) {
               this.$router.go("/admincoupon")
@@ -155,8 +154,8 @@ export default {
     async editCoupon() {
       try {
         console.log(this.editInfo)
-        await axios.patch(
-          `https://gosurveasy.co.kr/coupon/${this.editInfo.id}`,
+        await this.axios.patch(
+          `/coupon/${this.editInfo.id}`,
           {
             code : this.editInfo.code,
             discountPercent : this.editInfo.discountPercent,

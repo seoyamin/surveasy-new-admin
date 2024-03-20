@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data(){
     return {
@@ -44,7 +43,7 @@ export default {
   methods : {
     async listAdminReviews() {
       try{
-        const response = await axios.get("https://gosurveasy.co.kr/review/admin?page=0")
+        const response = await this.axios.get("/review/admin?page=0")
         this.reviewList = response.data.reviewList
         this.totalPages = response.data.pageInfo.totalPages
       }catch(error) {
@@ -54,7 +53,7 @@ export default {
     
     async loadMoreReviews(i) {
       try {
-        const response = await axios.get("http://gosurveasy.co.kr/review/admin?page=" + i)
+        const response = await this.axios.get("/review/admin?page=" + i)
         this.reviewList = response.data.reviewList
       } catch(err) {
         console.log(err)

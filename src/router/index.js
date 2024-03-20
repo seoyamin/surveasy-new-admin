@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AdminSurvey from '../view/survey/AdminSurveyListView.vue'
 import AdminSurveyOrder from '../view/survey/AdminSurveyOrderListView.vue'
-import AdminResponse from '../view/response/AdminResponseView.vue'
+import AdminAggregation from '../view/aggregation/AdminAggregationView.vue'
 import AdminPanel from '../view/panel/AdminPanelListView.vue'
 import AdminCoupon from '../view/coupon/AdminCouponListView.vue'
 import AdminReview from '../view/review/AdminReviewListView.vue'
@@ -38,9 +38,9 @@ const routes = [
     props: true,
   },
   {
-    path:'/admin/response',
-    name: 'AdminResponse',
-    component: AdminResponse
+    path:'/admin/aggregation',
+    name: 'AdminAggregation',
+    component: AdminAggregation
   },
   {
     path:'/admin/panel',
