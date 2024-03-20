@@ -2,8 +2,9 @@
   <div class="admin-view-title">응답 검수</div>
   <div class="admin-view-container">
     <span class="admin-response-item" v-for="(item, index) in responseList" :key="item.id">
-      <img v-if="item.status=='WRONG'" :src="item.imgUrl" class="admin-response-img" id="admin-response-img-red">
-      <img v-else :src="item.imgUrl" @click="updateResponseWrong(item.id, index)" class="admin-response-img" id="admin-response-img-not-red">
+      <img v-if="item.status=='WRONG'" @click="updateResponseStatus(item.id, index, 'CREATED')" :src="item.imgUrl" class="admin-response-img" id="admin-response-img-red">
+      <img v-else-if="item.status=='DONE'||item.status=='WAITING'" :src="item.imgUrl" class="admin-response-img" id="admin-response-img-dark">
+      <img v-else :src="item.imgUrl" @click="updateResponseStatus(item.id, index, 'WRONG')" class="admin-response-img" id="admin-response-img-not-red">
     </span>
   </div>
   
@@ -32,14 +33,14 @@ export default {
       }
     },
 
-    async updateResponseWrong(responseId, index) {
+    async updateResponseStatus(responseId, index, status) {
       try {
         await this.axios.patch(
           "/response/admin/" + responseId,
-          { status : "WRONG" }
+          { status : status }
         )
         var response = this.responseList[index]
-        response.status = "WRONG"
+        response.status = status
         this.responseList[index] = response
       } catch(err) {
         console.log(err)
@@ -66,5 +67,8 @@ export default {
 }
 #admin-response-img-red {
   background: rgb(191, 8, 8);
+}
+#admin-response-img-dark {
+  filter: brightness(30%)
 }
 </style>
