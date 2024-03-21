@@ -10,6 +10,7 @@
           <th>리뷰 별점</th>
           <th>리뷰 내용</th>
           <th>작성일</th>
+          <th>리뷰 상태 변경</th>
         </tr>
       </thead>
       <tbody>
@@ -20,13 +21,12 @@
           <td>{{item.grade}}</td>
           <td>{{item.content}}</td>
           <td>{{item.createdAt}}</td>
+          <td><button @click="showReview(item.id)">보여주기</button></td>
         </tr>
       </tbody>
     </table>
     <button v-for="i in totalPages" :key="i" @click="loadMoreReviews(i-1)">{{i}}</button>
   </div>
-  
-    
 </template>
 
 <script>
@@ -55,6 +55,22 @@ export default {
       try {
         const response = await this.axios.get("/review/admin?page=" + i)
         this.reviewList = response.data.reviewList
+      } catch(err) {
+        console.log(err)
+      }
+    },
+
+    async showReview(id){
+      try {
+        const response = await this.axios.patch(
+          `/review/admin/${id}`,
+          { status : "VISIBLE" }
+        )
+        if(response.status == 200){
+          alert("성공했습니다.")
+        }else{
+          alert("다시 시도해주세요")
+        }
       } catch(err) {
         console.log(err)
       }
