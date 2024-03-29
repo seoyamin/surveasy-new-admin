@@ -1,5 +1,4 @@
 <template>
-  <div class="admin-view-title">리뷰 관리</div>
   <div class="admin-view-container">
     <table class="admin-view-table">
       <thead>
