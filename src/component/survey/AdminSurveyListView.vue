@@ -1,5 +1,4 @@
 <template>
-  <div class="admin-view-title">설문 관리</div>
   <div class="admin-view-container">
     <table class="admin-view-table">
       <thead>
@@ -36,11 +35,10 @@
     </table>
     <button v-for="i in totalPages" :key="i" @click="loadMoreSurveys(i-1)">{{i}}</button>
   </div>
-  
-    
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data(){
     return {
@@ -61,7 +59,7 @@ export default {
     async listAdminSurveys(){
       console.log('listAdminSurveys')
       try{
-        const response = await this.axios.get("/survey/admin?page=0")
+        const response = await instanceWithAuth.get("/survey/admin?page=0")
         this.surveyList = response.data.surveyList
         this.totalPages = response.data.pageInfo.totalPages
       }catch(error) {
@@ -71,7 +69,7 @@ export default {
     
     async loadMoreSurveys(i) {
       try {
-        const response = await this.axios.get("/survey/admin?page=" + i)
+        const response = await instanceWithAuth.get("/survey/admin?page=" + i)
         this.surveyList = response.data.surveyList
       } catch(err) {
         console.log(err)
@@ -82,7 +80,7 @@ export default {
       console.log('updateSurvey', progress)
       
       try {
-        const response = await this.axios.patch(`/survey/admin/${id}`,{
+        const response = await instanceWithAuth.patch(`/survey/admin/${id}`,{
           progress : progress,
           noticeToPanel : "",
           reward : 0,

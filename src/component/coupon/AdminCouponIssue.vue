@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data() {
     return {
@@ -21,9 +22,9 @@ export default {
   },
 
   methods: {  
-    async issueCoupon(){
+    async issueCoupon() {
       try {
-        await this.axios.post(
+        await instanceWithAuth.post(
           '/coupon',
           {
             code : this.couponInfo.code.toString(),

@@ -3,7 +3,6 @@
     <div id="admin-main-navigator">
       <div id="admin-main-logo">
         <router-link to="/"><img src="./logo.png" id="admin-main-logo-img"></router-link>
-        
       </div>
         <div class="admin-main-navigator-item">
           <div id="admin-main-navigator-item-title">Survey</div>
@@ -23,8 +22,11 @@
           <div id="admin-main-navigator-item-title">Review</div>
           <div id="admin-main-navigator-item-option"><router-link to="/admin/review">리뷰 관리</router-link></div>
         </div>
+        <button><router-link to="/admin/login">로그인</router-link></button>
+        <button @click="logout">로그아웃</button>
       </div>
-    <div id="admin-main-container">
+      
+    <div id="admin-main-container">      
       <router-view></router-view>
     </div>
   </div>
@@ -32,17 +34,26 @@
 
 <script>
 /* eslint-disable */
-import AdminSurvey from './view/survey/AdminSurveyView.vue'
 import {initializeApp} from 'firebase/app'
 import firebaseConfig from './config/firebaseConfig'
+import { instanceWithAuth } from './api/index'
 export default {
   name: 'App',
-  components: {
-    AdminSurvey
-  },
 
   mounted() {
     const firebaseApp = initializeApp(firebaseConfig)
+  },
+
+  methods: {
+    async logout() {
+      try {
+          await instanceWithAuth.get('/panel/signout')
+          this.$store.dispatch("logout")
+        } catch (error) {
+          alert("로그아웃에 실패했습니다")
+          console.log(error)
+        }
+    }
   }
 }
 </script>

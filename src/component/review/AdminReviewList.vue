@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data(){
     return {
@@ -78,7 +79,7 @@ export default {
   methods : {
     async listAdminReviews() {
       try{
-        const response = await this.axios.get("/review/admin?page=0")
+        const response = await instanceWithAuth.get("/review/admin?page=0")
         this.reviewList = response.data.reviewList
         this.totalPages = response.data.pageInfo.totalPages
       }catch(error) {
@@ -88,7 +89,7 @@ export default {
     
     async loadMoreReviews(i) {
       try {
-        const response = await this.axios.get("/review/admin?page=" + i)
+        const response = await instanceWithAuth.get("/review/admin?page=" + i)
         this.reviewList = response.data.reviewList
       } catch(err) {
         console.log(err)
@@ -97,7 +98,7 @@ export default {
 
     async updateReview(){
       try {
-        const response = await this.axios.patch(
+        const response = await instanceWithAuth.patch(
           `/review/admin/${this.editInfo.id}`,
           { 
             status : this.editInfo.status,

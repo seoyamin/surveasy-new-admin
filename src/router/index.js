@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Login from '../view/auth/Login.vue'
 import AdminSurvey from '../view/survey/AdminSurveyView.vue'
 import AdminSurveyOrder from '../view/survey/AdminSurveyOrderView.vue'
 import AdminAggregation from '../view/aggregation/AdminAggregationView.vue'
@@ -7,6 +8,11 @@ import AdminCoupon from '../view/coupon/AdminCouponView.vue'
 import AdminReview from '../view/review/AdminReviewView.vue'
 
 const routes = [
+  {
+    path:'/admin/login',
+    name: 'Login',
+    component: Login
+  },
   {
     path:'/admin/survey/order',
     name: 'AdminSurveyOrder',

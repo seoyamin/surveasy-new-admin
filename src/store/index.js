@@ -3,6 +3,11 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
+    isLoggedIn: false, // !localStorage.getItem("access_token"),
+    tokens: {
+      accessToken: null,
+      refreshToken: null
+    },
     surveys : [],
     lastDocSnap : null,
     surveyToPass : null,
@@ -30,11 +35,46 @@ export default createStore({
       }
     }
   },
+  getters: {
+    isLoggedIn() {
+      // return state.tokens.accessToken == null ? false : true
+      return localStorage.getItem("access_token") == null ? false : true
+    }
+  },
   mutations: {
-    
+    setTokensMutation(state, _tokens) {
+      state.isLoggedIn = true
+      state.tokens.accessToken = _tokens.accessToken
+      state.tokens.refreshToken = _tokens.refreshToken
+    },
+
+    setAccessTokenMutation(state, _accesToken) {
+      state.tokens.accessToken = _accesToken
+    },
+
+    logoutMutation(state) {
+      state.isLoggedIn = false
+      state.tokens.accessToken =  null
+      state.tokens.refreshToken = null
+    }
   },
   actions: {
-    
+    setTokens: ({commit}, _tokens) => {
+      commit('setTokensMutation', _tokens)
+      localStorage.setItem("access_token", _tokens.accessToken)
+      localStorage.setItem("refresh_token", _tokens.refreshToken)
+    },
+
+    setAccessTokens: ({commit}, _accesToken) => {
+      commit('setAccessTokensMutation', _accesToken)
+      localStorage.setItem("access_token", _accesToken)
+    },
+
+    logout: ({commit}) => {
+      commit('logoutMutiation')
+      localStorage.removeItem("access_token")
+      localStorage.removeItem("refresh_token")
+    }
   },
   
  })

@@ -52,26 +52,24 @@
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data() {
     return {
       couponInfo: {
-        code: '',
-        discountPercent: 0,
-      },
-
-      editInfo: {
-        id : 0,
         code : '',
         discountPercent : 0,
-        status : ''
+        status: ''
+      },
+      editInfo: {
+        code : '',
+        discountPercent : 0,
+        status: ''
       },
       statusType: ["VALID", "INVALID"],
       couponList: [],
 
-      editModal : false,
-
-
+      editModal : false
     }
   },
 
@@ -82,7 +80,7 @@ export default {
   methods: {
     async getCouponList() {
       try {
-        const response = await this.axios.get("/coupon")
+        const response = await instanceWithAuth.get("/coupon")
         this.couponList = response.data.couponList
       } catch (error) {
         console.log(error)
@@ -95,14 +93,18 @@ export default {
 
     openModel(item){
       this.editModal = true
-      this.couponInfo = item
+
+      this.couponInfo.code = item.code
+      this.couponInfo.discountPercent = item.discountPercent
+      this.couponInfo.status = item.status
+
       this.editInfo = item
     },
 
     async deleteCoupon(id){
       try {
         if (confirm("정말 삭제하시겠습니까?")) {
-          const response = await this.axios.delete(`/coupon/${id}`)
+          const response = await instanceWithAuth.delete(`/coupon/${id}`)
           if (response.status == 200) {
             if (confirm("삭제되었습니다.")) {
               this.$router.go("/admincoupon")
@@ -120,12 +122,21 @@ export default {
 
     async editCoupon() {
       try {
-        var body = this.editInfo
-        if(body.code == this.couponInfo.code) delete body.code
-        if(body.discountPercent == this.couponInfo.discountPercent) delete body.discountPercent
-        if(body.status == this.couponInfo.status) delete body.status
+        let body = new Object()
+        if(this.editInfo.code != this.couponInfo.code) {
+          
+          body.code = this.editInfo.code
+        }
+          
+        if(this.editInfo.discountPercent != this.couponInfo.discountPercent) {
+          body.discountPercent = this.editInfo.discountPercent
+        }
+          
+        if(this.editInfo.status != this.couponInfo.status) {
+          body.status = this.editInfo.status
+        }
 
-        await this.axios.patch(
+        await instanceWithAuth.patch(
           `/coupon/${this.editInfo.id}`,
           body
         )
