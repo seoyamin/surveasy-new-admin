@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AdminSurvey from '../view/survey/AdminSurveyListView.vue'
-import AdminSurveyOrder from '../view/survey/AdminSurveyOrderListView.vue'
+import AdminSurvey from '../view/survey/AdminSurveyView.vue'
+import AdminSurveyOrder from '../view/survey/AdminSurveyOrderView.vue'
 import AdminAggregation from '../view/aggregation/AdminAggregationView.vue'
-import AdminPanel from '../view/panel/AdminPanelListView.vue'
-import AdminCoupon from '../view/coupon/AdminCouponListView.vue'
-import AdminReview from '../view/review/AdminReviewListView.vue'
+import AdminPanel from '../view/panel/AdminPanelView.vue'
+import AdminCoupon from '../view/coupon/AdminCouponView.vue'
+import AdminReview from '../view/review/AdminReviewView.vue'
 
 const routes = [
   {
@@ -29,11 +29,11 @@ const routes = [
   },
   {
     path: '/admin/survey/:id/response',
-    name: 'AdminResponseList',
+    name: 'AdminResponse',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../view/response/AdminResponseList.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../view/response/AdminResponseView.vue'),
     // true로 설정하면 데이터를 props로도 받습니다.
     props: true,
   },

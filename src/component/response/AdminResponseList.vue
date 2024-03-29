@@ -1,5 +1,4 @@
 <template>
-  <div class="admin-view-title">응답 검수</div>
   <div class="admin-view-container">
     <span class="admin-response-item" v-for="(item, index) in responseList" :key="item.id">
       <img v-if="item.status=='WRONG'" @click="updateResponseStatus(item.id, index, 'CREATED')" :src="item.imgUrl" class="admin-response-img" id="admin-response-img-red">
@@ -7,8 +6,6 @@
       <img v-else :src="item.imgUrl" @click="updateResponseStatus(item.id, index, 'WRONG')" class="admin-response-img" id="admin-response-img-not-red">
     </span>
   </div>
-  
-    
 </template>
 
 <script>
@@ -47,8 +44,6 @@ export default {
       }
     }
   }
-
-  
 }
 </script>
 

@@ -32,7 +32,7 @@
 
 <script>
 /* eslint-disable */
-import AdminSurvey from './view/survey/AdminSurveyListView.vue'
+import AdminSurvey from './view/survey/AdminSurveyView.vue'
 import {initializeApp} from 'firebase/app'
 import firebaseConfig from './config/firebaseConfig'
 export default {
