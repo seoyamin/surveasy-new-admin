@@ -22,33 +22,47 @@
           <div id="admin-main-navigator-item-title">Review</div>
           <div id="admin-main-navigator-item-option"><router-link to="/admin/review">리뷰 관리</router-link></div>
         </div>
-        <button><router-link to="/admin/login">로그인</router-link></button>
         <button @click="logout">로그아웃</button>
       </div>
       
     <div id="admin-main-container">      
-      <router-view></router-view>
+      <LoginInput v-if="!loggedIn" />
+      <router-view v-else></router-view>
     </div>
+
   </div>
 </template>
 
 <script>
-/* eslint-disable */
-import {initializeApp} from 'firebase/app'
-import firebaseConfig from './config/firebaseConfig'
 import { instanceWithAuth } from './api/index'
+import store from './store'
+import LoginInput from './component/auth/LoginInput.vue'
 export default {
   name: 'App',
-
+  components: {
+    LoginInput
+  },
+  data() {
+    return {
+      loggedIn : false
+    }
+  },
   mounted() {
-    const firebaseApp = initializeApp(firebaseConfig)
+    this.isLoggedIn()
   },
 
   methods: {
+    isLoggedIn() {
+      this.loggedIn = store.getters.isLoggedIn
+      //if(this.loggedIn) this.$router.go("/admin/survey/order")
+    },
+
     async logout() {
       try {
           await instanceWithAuth.get('/panel/signout')
           this.$store.dispatch("logout")
+          alert("로그아웃되었습니다")
+          this.$router.go("/")
         } catch (error) {
           alert("로그아웃에 실패했습니다")
           console.log(error)

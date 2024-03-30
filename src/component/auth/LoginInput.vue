@@ -1,8 +1,11 @@
 <template>
   <div id="admin-login-container">
-    <input id="admin-login-input" type="email" placeholder="이메일" v-model="email" />
-    <input id="admin-login-input" type="password" placeholder="비밀번호" v-model="password" />
-    <button id="admin-login-button" @click="login">로그인하기</button>
+    <div class="admin-view-title">로그인</div>
+      <div id="admin-login-container">
+      <input id="admin-login-input" type="email" placeholder="이메일" v-model="email" />
+      <input id="admin-login-input" type="password" placeholder="비밀번호" v-model="password" />
+      <button id="admin-login-button" @click="login">로그인하기</button>
+    </div>
   </div>
 </template>
 
@@ -34,7 +37,7 @@ export default {
           const response = await instance.post(
             '/panel/signin',
             {
-              uid: "a",
+              uid: "admin",
               platform: "IOS",
               email: this.email,
               password: this.password
@@ -43,7 +46,7 @@ export default {
           this.$store.dispatch("setTokens", response.data)
           this.$router.go("/admin/survey/order")
         } catch (error) {
-          alert("로그인에 실패했습니다")
+          alert(error.response.data.reason)
           console.log(error)
         }
       }
@@ -61,9 +64,10 @@ export default {
   justify-content: center;
 }
 #admin-login-input {
-  width: 270px;
-  height: 40px;
+  width: 250px;
+  height: 30px;
   margin: 5px;
+  padding: 7px;
 }
 #admin-login-button {
   width: 270px;
