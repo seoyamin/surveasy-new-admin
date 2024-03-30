@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data() {
     return {
@@ -34,7 +35,7 @@ export default {
   methods: {
     async getFileList() {
       try {
-        const response = await this.axios.get('/file')
+        const response = await instanceWithAuth.get('/file')
         this.fileList = response.data.fileList
       } catch(err) {
         console.log(err)
@@ -45,7 +46,7 @@ export default {
     async deleteFile(fileId) {
       try {
           if(window.confirm("파일을 삭제하시겠습니까?")) {
-            await this.axios.delete(`/file/${fileId}`).then(alert("파일이 삭제되었습니다"))
+            await instanceWithAuth.delete(`/file/${fileId}`).then(alert("파일이 삭제되었습니다"))
             this.$router.go("/admin/aggregation")
           } else {
             return;

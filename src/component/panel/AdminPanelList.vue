@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { instanceWithAuth } from '../../api/index'
 export default {
   data(){
     return {
@@ -52,7 +52,7 @@ export default {
   methods : {
     async listAdminPanels(){
       try{
-        const response = await axios.get("https://gosurveasy.co.kr/panel/admin?page=0")
+        const response = await instanceWithAuth.get("https://gosurveasy.co.kr/panel/admin?page=0")
         this.panelList = response.data.panelList
         this.totalPages = response.data.pageInfo.totalPages
       }catch(error) {
@@ -62,7 +62,7 @@ export default {
 
     async loadMorePanels(i) {
       try {
-        const response = await axios.get("https://gosurveasy.co.kr/panel/admin?page=" + i)
+        const response = await instanceWithAuth.get("https://gosurveasy.co.kr/panel/admin?page=" + i)
         this.panelList = response.data.panelList
       } catch(err) {
         console.log(err)

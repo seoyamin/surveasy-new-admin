@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data() {
     return {
@@ -17,7 +18,7 @@ export default {
     async doneAggregation() {
       try {
         if(window.confirm("정산 완료 처리하시겠습니까?")) {
-          await this.axios.get(`/response/admin/done`)
+          await instanceWithAuth.get(`/response/admin/done`)
           .then(alert('정산 완료 처리되었습니다'))
         } else {
             return;

@@ -3,7 +3,6 @@
     <div id="admin-main-navigator">
       <div id="admin-main-logo">
         <router-link to="/"><img src="./logo.png" id="admin-main-logo-img"></router-link>
-        
       </div>
         <div class="admin-main-navigator-item">
           <div id="admin-main-navigator-item-title">Survey</div>
@@ -23,26 +22,52 @@
           <div id="admin-main-navigator-item-title">Review</div>
           <div id="admin-main-navigator-item-option"><router-link to="/admin/review">리뷰 관리</router-link></div>
         </div>
+        <button @click="logout">로그아웃</button>
       </div>
-    <div id="admin-main-container">
-      <router-view></router-view>
+      
+    <div id="admin-main-container">      
+      <LoginInput v-if="!loggedIn" />
+      <router-view v-else></router-view>
     </div>
+
   </div>
 </template>
 
 <script>
-/* eslint-disable */
-import AdminSurvey from './view/survey/AdminSurveyView.vue'
-import {initializeApp} from 'firebase/app'
-import firebaseConfig from './config/firebaseConfig'
+import { instanceWithAuth } from './api/index'
+import store from './store'
+import LoginInput from './component/auth/LoginInput.vue'
 export default {
   name: 'App',
   components: {
-    AdminSurvey
+    LoginInput
+  },
+  data() {
+    return {
+      loggedIn : false
+    }
+  },
+  mounted() {
+    this.isLoggedIn()
   },
 
-  mounted() {
-    const firebaseApp = initializeApp(firebaseConfig)
+  methods: {
+    isLoggedIn() {
+      this.loggedIn = store.getters.isLoggedIn
+      //if(this.loggedIn) this.$router.go("/admin/survey/order")
+    },
+
+    async logout() {
+      try {
+          await instanceWithAuth.get('/panel/signout')
+          this.$store.dispatch("logout")
+          alert("로그아웃되었습니다")
+          this.$router.go("/")
+        } catch (error) {
+          alert("로그아웃에 실패했습니다")
+          console.log(error)
+        }
+    }
   }
 }
 </script>

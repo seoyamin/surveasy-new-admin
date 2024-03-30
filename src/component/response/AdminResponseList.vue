@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data(){
     return {
@@ -23,7 +24,7 @@ export default {
     async listResponseList() {
       try {
         console.log("fetch responses")
-        const response = await this.axios.get("/response/admin/" + this.$route.params.id)
+        const response = await instanceWithAuth.get("/response/admin/" + this.$route.params.id)
         this.responseList = response.data.responseList
       } catch(error) {
         console.log(error)
@@ -32,7 +33,7 @@ export default {
 
     async updateResponseStatus(responseId, index, status) {
       try {
-        await this.axios.patch(
+        await instanceWithAuth.patch(
           "/response/admin/" + responseId,
           { status : status }
         )

@@ -1,5 +1,4 @@
 <template>
-<div class="admin-view-title">주문 관리</div>
   <div class="admin-view-container">
     <table class="admin-view-table">
       <thead>
@@ -51,34 +50,34 @@
   </div>
   
   <div v-if="editModal == true" class="edit-modal">
-      <div class="edit-contentsbox">
-        <div id="edit-top">
-          <a class="edit-close" @click="closeModal">X</a>
-          <p class="edit-title">설문 정보 입력하기</p>
+    <div class="edit-contentsbox">
+      <div id="edit-top">
+        <a class="edit-close" @click="closeModal">X</a>
+        <p class="edit-title">설문 정보 입력하기</p>
 
-        </div>
-    
-        <div id="edit-container">
-          <div id="detail-title">리워드 (필수)</div>
-            <input class="modal-input" type="text" v-model="editInfo.reward">
-            <div v-if="this.editModalNotice==true" id="modal-notice-red">* 리워드를 입력해주세요</div>
+      </div>
+  
+      <div id="edit-container">
+        <div id="detail-title">리워드 (필수)</div>
+          <input class="modal-input" type="text" v-model="editInfo.reward">
+          <div v-if="this.editModalNotice==true" id="modal-notice-red">* 리워드를 입력해주세요</div>
 
-          <div id="detail-title">패널 유의사항 (선택)</div>
-          <div id="modal-notice">* 고객 입력 : {{this.editInfo.notice!='' ? editInfo.notice : '없음'}}</div>
-            <input class="modal-input" type="text" v-model="editInfo.noticeToPanel">
-          
-          <div id="detail-title">링크 수정 (선택)</div>
-            <input class="modal-input" type="text" v-model="editInfo.link">
-          
-          <button id="edit-fin-btn" @click="updateSurvey">수정 완료</button>
-          
-        </div> 
+        <div id="detail-title">패널 유의사항 (선택)</div>
+        <div id="modal-notice">* 고객 입력 : {{this.editInfo.notice!='' ? editInfo.notice : '없음'}}</div>
+          <input class="modal-input" type="text" v-model="editInfo.noticeToPanel">
+        
+        <div id="detail-title">링크 수정 (선택)</div>
+          <input class="modal-input" type="text" v-model="editInfo.link">
+        
+        <button id="edit-fin-btn" @click="updateSurvey">수정 완료</button>
+        
+      </div> 
     </div>
   </div>
-    
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data(){
     return {
@@ -110,7 +109,7 @@ export default {
     async listAdminSurveys(){
       console.log('listAdminSurveys')
       try{
-        const response = await this.axios.get("/survey/admin?page=0")
+        const response = await instanceWithAuth.get("/survey/admin?page=0")
         this.surveyList = response.data.surveyList
         this.totalPages = response.data.pageInfo.totalPages
       }catch(error) {
@@ -121,7 +120,7 @@ export default {
     async loadMoreSurveys(i) {
       console.log('loadMoreSurveys')
       try {
-        const response = await this.axios.get("/survey/admin?page=" + i)
+        const response = await instanceWithAuth.get("/survey/admin?page=" + i)
         this.surveyList = response.data.surveyList
       } catch(err) {
         console.log(err)
@@ -149,7 +148,7 @@ export default {
       }
 
       else {
-        await this.axios.patch(
+        await instanceWithAuth.patch(
           `/survey/admin/${item.id}`,
           { status : item.status }
         )
@@ -173,7 +172,7 @@ export default {
           delete this.editInfo.link
         }
 
-        await this.axios.patch(
+        await instanceWithAuth.patch(
           `/survey/admin/${this.editInfo.id}`,
           this.editInfo
         )

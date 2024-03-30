@@ -1,6 +1,4 @@
 <template>
-  <div class="admin-view-title">설문 상세 보기</div>
-
     <!-- <button v-for="item in progressMap"></button> -->
     <!-- <select v-model="this.$store.state.surveyprogressmap">
               <option v-for="(item, index) in progressMap" :key="index" :value="item.value">{{item.name}}</option>
