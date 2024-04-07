@@ -64,8 +64,9 @@ export default {
           alert("로그아웃되었습니다")
           this.$router.go("/")
         } catch (error) {
-          alert("로그아웃에 실패했습니다")
           console.log(error)
+          this.$store.dispatch("logout")
+          this.$router.go("/")
         }
     }
   }
