@@ -135,7 +135,7 @@ export default {
 
     moveToResposneListPage(surveyId) {
       const paramToPass = { 'id' : surveyId }
-      this.$router.push({ name : 'AdminResponseList', params: {'id' : paramToPass.id}})
+      this.$router.push({ name : 'AdminResponse', params: {'id' : paramToPass.id}})
     },
 
     async updateStatus(item) {
