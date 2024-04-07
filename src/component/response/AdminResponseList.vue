@@ -11,6 +11,11 @@
 <script>
 import { instanceWithAuth } from '../../api/index'
 export default {
+  props: {
+    surveyId: {
+      type: Number
+    },
+  },
   data(){
     return {
       totalPages: 0,
@@ -24,7 +29,7 @@ export default {
     async listResponseList() {
       try {
         console.log("fetch responses")
-        const response = await instanceWithAuth.get("/response/admin/" + this.$route.params.id)
+        const response = await instanceWithAuth.get("/response/admin/" + this.surveyId)
         this.responseList = response.data.responseList
       } catch(error) {
         console.log(error)
