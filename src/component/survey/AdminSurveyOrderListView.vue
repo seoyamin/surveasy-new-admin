@@ -7,12 +7,14 @@
           <th>sid</th>
           <th>상태</th>
           <th>응답수</th>
+          <th>주문일</th>
           <th>마감일</th>
           <th>가격</th>
           <th>소요시간</th>
           <th>제목</th>
           <th>성별</th>
           <th>나이대</th>
+          <th>타겟</th>
           <th>고객명</th>
           <th>선택신분</th>
           <th>상세보기</th>
@@ -31,6 +33,7 @@
             </select>
           </td>
           <td style="cursor:pointer;" @click="moveToResposneListPage(item.id)">{{item.responseCount}} / {{item.headCount.substring(5)}}</td>
+          <td>{{item.uploadedAt.substring(0, 16)}}</td>
           <td>{{item.dueDate.substring(0, 16)}}</td>
           <td>{{item.price}}</td>
           <td>{{this.$store.state.maps.surveySpendTimeMap[item.spendTime]}}</td>
@@ -39,6 +42,7 @@
           <td>
             <div v-for="age in item.targetAgeListStr.split(', ')" :key="age.value">{{this.$store.state.maps.surveyTargetAgeMap[age]}}</div>
           </td>
+          <td>{{item.targetInput}}</td>
           <td>{{item.username}}</td>
           <td>{{this.$store.state.maps.surveyIdentityMap[item.identity]}}</td>
           <td><button @click="moveToSurveyDetailPage(item.id, item)">상세</button></td>
