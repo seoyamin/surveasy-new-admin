@@ -7,15 +7,18 @@
           <th>sid</th>
           <th>상태</th>
           <th>응답수</th>
+          <th>주문일</th>
           <th>마감일</th>
           <th>가격</th>
           <th>소요시간</th>
           <th>제목</th>
           <th>성별</th>
           <th>나이대</th>
+          <th>타겟</th>
           <th>고객명</th>
           <th>선택신분</th>
           <th>상세보기</th>
+          <th>삭제</th>
         </tr>
       </thead>
       <tbody>
@@ -31,17 +34,20 @@
             </select>
           </td>
           <td style="cursor:pointer;" @click="moveToResposneListPage(item.id)">{{item.responseCount}} / {{item.headCount.substring(5)}}</td>
+          <td>{{item.uploadedAt.substring(0, 16)}}</td>
           <td>{{item.dueDate.substring(0, 16)}}</td>
           <td>{{item.price}}</td>
           <td>{{this.$store.state.maps.surveySpendTimeMap[item.spendTime]}}</td>
-          <td>{{item.title}}</td>
+          <td><a target="_blank" :class="{red:item.status=='CREATED'||item.status=='WAITING', green:item.status=='IN_PROGRESS', black:item.status=='DONE'}" :href=item.link>{{item.title}}</a></td>
           <td>{{this.$store.state.maps.surveyTargetGenderMap[item.targetGender]}}</td>
           <td>
             <div v-for="age in item.targetAgeListStr.split(', ')" :key="age.value">{{this.$store.state.maps.surveyTargetAgeMap[age]}}</div>
           </td>
+          <td>{{item.targetInput}}</td>
           <td>{{item.username}}</td>
           <td>{{this.$store.state.maps.surveyIdentityMap[item.identity]}}</td>
           <td><button @click="moveToSurveyDetailPage(item.id, item)">상세</button></td>
+          <td><button @click="deleteSurvey(item.id)">X</button></td>
           <!-- <td><button @click="updateSurvey(item.id, item.progress)">적용</button></td> -->
         </tr>
       </tbody>
@@ -122,6 +128,22 @@ export default {
       try {
         const response = await instanceWithAuth.get("/survey/admin?page=" + i)
         this.surveyList = response.data.surveyList
+      } catch(err) {
+        console.log(err)
+      }
+    },
+
+    async deleteSurvey(id) {
+      try {
+        if(window.confirm("설문을 삭제하시겠습니까?")) {
+           await instanceWithAuth.delete("/survey/admin/" + id)
+          .then(
+            alert('삭제되었습니다'),
+            this.listAdminSurveys()
+          )
+        } else {
+            return;
+        }
       } catch(err) {
         console.log(err)
       }
@@ -221,10 +243,16 @@ export default {
   max-width: 400px;
 }
 .red {
+  text-decoration-line: none;
   color: rgb(168, 18, 18);
 }
 .green {
+  text-decoration-line: none;
   color: rgb(4, 150, 4);
+}
+.black {
+  text-decoration-line: none;
+  color: #444444
 }
 #detail-title {
   font-size: 16px;
