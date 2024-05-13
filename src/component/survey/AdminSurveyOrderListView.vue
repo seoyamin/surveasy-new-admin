@@ -34,7 +34,7 @@
           <td>{{item.dueDate.substring(0, 16)}}</td>
           <td>{{item.price}}</td>
           <td>{{this.$store.state.maps.surveySpendTimeMap[item.spendTime]}}</td>
-          <td>{{item.title}}</td>
+          <td><a target="_blank" :class="{red:item.status=='CREATED'||item.status=='WAITING', green:item.status=='IN_PROGRESS', black:item.status=='DONE'}" :href=item.link>{{item.title}}</a></td>
           <td>{{this.$store.state.maps.surveyTargetGenderMap[item.targetGender]}}</td>
           <td>
             <div v-for="age in item.targetAgeListStr.split(', ')" :key="age.value">{{this.$store.state.maps.surveyTargetAgeMap[age]}}</div>
@@ -221,10 +221,16 @@ export default {
   max-width: 400px;
 }
 .red {
+  text-decoration-line: none;
   color: rgb(168, 18, 18);
 }
 .green {
+  text-decoration-line: none;
   color: rgb(4, 150, 4);
+}
+.black {
+  text-decoration-line: none;
+  color: #444444
 }
 #detail-title {
   font-size: 16px;
