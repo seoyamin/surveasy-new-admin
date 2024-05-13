@@ -1,37 +1,75 @@
 <template>
-  <div class="admin-view-title">설문 상세 보기</div>
-
-    <!-- <button v-for="item in progressMap"></button> -->
-    <!-- <select v-model="this.$store.state.surveyprogressmap">
-              <option v-for="(item, index) in progressMap" :key="index" :value="item.value">{{item.name}}</option>
-            </select> -->
-    <!-- <button @click="openModal()">수정하기</button> -->
+    <button @click="openModal()">수정하기</button>
         <!-- Modal -->
-    <div class="modal" v-if="isModalOpen">
-      <div class="modal-content">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>설문 수정 (아직 개발 미완)</h2>
 
-        <label for="rewardInput">Set Reward:</label>
-        <input type="text" id="rewardInput" v-model="rewardValue" />
+    <div v-if="editModal" class="edit-modal">
+    <div class="edit-contentsbox">
+      <div id="edit-top">
+        <a class="edit-close" @click="closeModal">X</a>
+        <p class="edit-title">설문 수정하기</p>
 
-        <button @click="setReward">Set Reward</button>
-        <div class="input-group">
-          <label for="input1">Input 1:</label>
-          <input type="text" id="input1" v-model="input1Value" />
-        </div>
-
-        <div class="input-group">
-          <label for="input2">Input 2:</label>
-          <input type="text" id="input2" v-model="input2Value" />
-        </div>
-
-        <div class="input-group">
-          <label for="input3">Input 3:</label>
-          <input type="text" id="input3" v-model="input3Value" />
-        </div>
       </div>
+  
+      <div id="edit-container">
+        <div id="detail-title">리워드</div>
+          <input class="modal-input" type="text" v-model="editInfo.reward">
+
+        <div id="detail-title">패널 유의사항</div>
+        <div id="modal-notice">* 고객 입력 : {{this.editInfo.notice!='' ? editInfo.notice : '없음'}}</div>
+          <input class="modal-input" type="text" v-model="editInfo.noticeToPanel">
+        
+        <div id="detail-title">링크</div>
+          <input class="modal-input" type="text" v-model="editInfo.link">
+
+        <div id="detail-title">마감일</div>
+          <div>
+            <input class="modal-input" type="Date" v-model="editDueDate.dueDate">
+            <select class="modal-input" v-model="editDueDate.dueTime">
+              <option :value="String('08:00')">08 : 00</option>
+              <option :value="String('09:00')">09 : 00</option>
+              <option :value="String('10:00')">10 : 00</option>
+              <option :value="String('11:00')">11 : 00</option>
+              <option :value="String('12:00')">12 : 00</option>
+              <option :value="String('13:00')">13 : 00</option>
+              <option :value="String('14:00')">14 : 00</option>
+              <option :value="String('15:00')">15 : 00</option>
+              <option :value="String('16:00')">16 : 00</option>
+              <option :value="String('17:00')">17 : 00</option>
+              <option :value="String('18:00')">18 : 00</option>
+              <option :value="String('19:00')">19 : 00</option>
+              <option :value="String('20:00')">20 : 00</option>
+              <option :value="String('21:00')">21 : 00</option>
+              <option :value="String('22:00')">22 : 00</option>
+              <option :value="String('23:00')">23 : 00</option>
+              <option :value="String('23:59')">23 : 59</option>
+            </select>
+          </div>
+          
+        
+        <div id="detail-title">요구 응답수</div>
+          <select class="modal-input" v-model="editInfo.headCount">
+            <option :value="String('HEAD_30')">30명</option>
+            <option :value="String('HEAD_40')">40명</option>
+            <option :value="String('HEAD_50')">50명</option>
+            <option :value="String('HEAD_60')">60명</option>
+            <option :value="String('HEAD_70')">70명</option>
+            <option :value="String('HEAD_80')">80명</option>
+            <option :value="String('HEAD_90')">90명</option>
+            <option :value="String('HEAD_100')">100명</option>
+            <option :value="String('HEAD_120')">120명</option>
+            <option :value="String('HEAD_140')">140명</option>
+            <option :value="String('HEAD_160')">160명</option>
+            <option :value="String('HEAD_180')">180명</option>
+            <option :value="String('HEAD_200')">200명 (최대 응답수)</option>
+          </select>
+        
+        <div>
+          <button id="edit-fin-btn" @click="updateSurvey(detailedSurvey.id)">수정 완료</button>
+        </div>
+        
+      </div> 
     </div>
+  </div>
 
   <div class="admin-survey-detail-container">
     <table class="admin-view-survey-detail-table" id="admin-survey-detail-table">
@@ -143,7 +181,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import { instanceWithAuth } from '../../api/index'
 import { mapState } from 'vuex';
 export default {
   name: "SurveyDetail",
@@ -154,39 +192,64 @@ export default {
     return {
       survey : null,
       detailedSurvey : this.$store.state.surveyToPass,
-      isModalOpen: false,
-      updatedOptions: {
-        status: this.$store.state.surveyToPass.status,
-        reward: this.$store.state.surveyToPass.reward,
-        noticeToPanel: this.$store.state.surveyToPass.noticeToPanel,
-        link: this.$store.state.surveyToPass.link
+      editDueDate: {
+        dueDate: this.$store.state.surveyToPass.dueDate.substring(0, 10),
+        dueTime: this.$store.state.surveyToPass.dueDate.substring(11, 16)
       },
-      rewardValue: '',
-      input1Value: '', // Store the value entered in the first additional input
-      input2Value: '', // Store the value entered in the second additional input
-      input3Value: '',
+      editInfo: {
+        reward : this.$store.state.surveyToPass.reward,
+        notice: this.$store.state.surveyToPass.notice,
+        noticeToPanel: this.$store.state.surveyToPass.noticeToPanel,
+        link: this.$store.state.surveyToPass.link,
+        dueDate: this.$store.state.surveyToPass.dueDate,
+        headCount: this.$store.state.surveyToPass.headCount
+      },
+      editModal : false,
+      editModalNotice : false,
     }
   },
   created() {
-
+    
   },
 
   methods : {
     openModal() {
-      this.isModalOpen = true;
+      this.editModal = true;
+      console.log(this.editDueDate)
     },
 
     closeModal() {
-      this.isModalOpen = false;
+      this.editModal = false;
     },
 
-    setReward() {
-      // Implement the logic to handle the reward value as needed
-      console.log('Setting reward:', this.rewardValue);
-
-      // Close the modal after setting the reward
-      this.closeModal();
+    async updateSurvey(id) {
+      try {
+        console.log(id)
+        this.editInfo.dueDate = this.editDueDate.dueDate + "T" + this.editDueDate.dueTime + "Z"
+        console.log(this.editInfo)
+        await instanceWithAuth.patch(
+          `/survey/admin/${id}`,
+          this.editInfo
+        )
+        // await this.loadSurvey(id);
+        this.closeModal();
+      } catch (error) {
+        console.log(error)
+      }
     },
+
+    async loadSurvey(id) {
+      try {
+        this.survey = await instanceWithAuth.get(
+          `/survey/admin/${id}`
+        )
+        console.log(this.survey)
+        this.detailedSurvey = this.survey
+        this.$store.state.surveyToPass = this.survey
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 };
 </script>
@@ -277,5 +340,38 @@ export default {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+#detail-title {
+  font-size: 16px;
+  color: #494949;
+  text-align: left;
+  font-weight: bold;
+  margin: 10px;
+}
+#edit-fin-btn {
+  padding: 7px 15px 7px 15px;
+  margin: 15px 0px 0px 0px;
+  color: green;
+  background-color: #FFFFFF;
+  border: 1.5px solid green;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+#edit-fin-btn:hover{
+  color: white;
+  background: green;
+}
+#modal-notice {
+  text-align: left;
+  color: rgb(187, 187, 187);
+  font-size: 13px;
+}
+#modal-notice-red {
+  text-align: left;
+  color: rgb(199, 16, 16);
+  font-size: 13px;
+  margin-bottom: 20px;
 }
 </style>
