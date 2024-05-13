@@ -18,6 +18,7 @@
           <th>고객명</th>
           <th>선택신분</th>
           <th>상세보기</th>
+          <th>삭제</th>
         </tr>
       </thead>
       <tbody>
@@ -46,6 +47,7 @@
           <td>{{item.username}}</td>
           <td>{{this.$store.state.maps.surveyIdentityMap[item.identity]}}</td>
           <td><button @click="moveToSurveyDetailPage(item.id, item)">상세</button></td>
+          <td><button @click="deleteSurvey(item.id)">X</button></td>
           <!-- <td><button @click="updateSurvey(item.id, item.progress)">적용</button></td> -->
         </tr>
       </tbody>
@@ -126,6 +128,22 @@ export default {
       try {
         const response = await instanceWithAuth.get("/survey/admin?page=" + i)
         this.surveyList = response.data.surveyList
+      } catch(err) {
+        console.log(err)
+      }
+    },
+
+    async deleteSurvey(id) {
+      try {
+        if(window.confirm("설문을 삭제하시겠습니까?")) {
+           await instanceWithAuth.delete("/survey/admin/" + id)
+          .then(
+            alert('삭제되었습니다'),
+            this.listAdminSurveys()
+          )
+        } else {
+            return;
+        }
       } catch(err) {
         console.log(err)
       }
