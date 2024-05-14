@@ -13,6 +13,8 @@
           <th>가격</th>
           <th>리워드</th>
           <th>고객명</th>
+          <th>유입</th>
+          <th>상세</th>
           <th>선택신분</th>
         </tr>
       </thead>
@@ -28,6 +30,8 @@
           <td>{{item.price}}</td>
           <td>{{item.reward}}</td>
           <td>{{item.username}}</td>
+          <td>{{item.inflow}}</td>
+          <td>{{item.inflow_detail}}</td>
           <td>{{this.$store.state.maps.surveyIdentityMap[item.identity]}}</td>
           <!-- <td><button @click="updateSurvey(item.id, item.progress)">적용</button></td> -->
         </tr>
@@ -39,6 +43,7 @@
 
 <script>
 import { instanceWithAuth } from '../../api/index'
+import { getDoc, doc, getFirestore } from 'firebase/firestore';
 export default {
   data(){
     return {
@@ -52,6 +57,9 @@ export default {
       surveyList : []
     }
   },
+  computed : {
+    
+  },
   mounted(){
     this.listAdminSurveys()
   },
@@ -62,6 +70,7 @@ export default {
         const response = await instanceWithAuth.get("/survey/admin?page=0")
         this.surveyList = response.data.surveyList
         this.totalPages = response.data.pageInfo.totalPages
+        this.getInflow()
       }catch(error) {
         console.log(error)
       }
@@ -71,6 +80,7 @@ export default {
       try {
         const response = await instanceWithAuth.get("/survey/admin?page=" + i)
         this.surveyList = response.data.surveyList
+        this.getInflow()
       } catch(err) {
         console.log(err)
       }
@@ -90,6 +100,18 @@ export default {
       } catch(err) {
         console.log(err)
       }
+    },
+
+    async getInflow() {
+      const db = getFirestore()
+      this.surveyList.forEach(async user => {
+        const docSnap = await getDoc(doc(db, "userData", user.email))
+        if(docSnap.exists()){
+          const data = docSnap.data()
+          user.inflow = data.funnel
+          user.inflow_detail = data.funnel_detail
+        }
+      })
     }
   }
 }

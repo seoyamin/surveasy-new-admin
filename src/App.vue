@@ -35,6 +35,9 @@
 
 <script>
 import { instanceWithAuth } from './api/index'
+import { initializeApp } from "firebase/app"
+import firebaseConfig from "./config/firebaseConfig"
+
 import store from './store'
 import LoginInput from './component/auth/LoginInput.vue'
 export default {
@@ -49,6 +52,7 @@ export default {
   },
   mounted() {
     this.isLoggedIn()
+    initializeApp(firebaseConfig)
   },
 
   methods: {
