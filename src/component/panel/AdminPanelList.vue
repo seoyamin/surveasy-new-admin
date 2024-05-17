@@ -1,4 +1,7 @@
 <template>
+<div>
+    <button @click="csvDownload()">csv 파일 다운로드</button>
+</div>
   <table class="admin-view-table">
     <thead>
       <tr>
@@ -43,7 +46,8 @@ export default {
   data(){
     return {
       totalPages : 0,
-      panelList : []
+      panelList : [],
+      jsonPanelList: []
     }
   },
   mounted(){
@@ -52,7 +56,7 @@ export default {
   methods : {
     async listAdminPanels(){
       try{
-        const response = await instanceWithAuth.get("https://gosurveasy.co.kr/panel/admin?page=0")
+        const response = await instanceWithAuth.get("/panel/admin?page=0")
         this.panelList = response.data.panelList
         this.totalPages = response.data.pageInfo.totalPages
       }catch(error) {
@@ -62,16 +66,54 @@ export default {
 
     async loadMorePanels(i) {
       try {
-        const response = await instanceWithAuth.get("https://gosurveasy.co.kr/panel/admin?page=" + i)
+        const response = await instanceWithAuth.get("/panel/admin?page=" + i)
         this.panelList = response.data.panelList
       } catch(err) {
         console.log(err)
       }
     },
+
+    async csvDownload() {
+      try {
+        if(window.confirm("csv 파일을 다운로드하시겠습니까?")) {
+           const response = await instanceWithAuth.get("/panel/admin/csv")
+           this.jsonPanelList = response.data.panelList           
+           this.jsonToCsv(this.jsonPanelList)
+           
+        } else {
+            return;
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    },
+
+    // Convert JSON to CSV manually
+    jsonToCsv(jsonPanelList) {
+        let csv = "data:text/csv;charset=utf-8,";
+        
+        // Extract headers
+        const headers = Object.keys(jsonPanelList[0]);
+        csv += headers.join(',') + '\n';
+        
+        // Extract values
+        jsonPanelList.forEach(obj => {
+            const values = headers.map(header => obj[header]);
+            csv += values.join(',') + '\n';
+        });
+
+
+        var encodedUri = encodeURI(csv);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", new Date().toISOString().substring(0, 10) + ".csv");
+        document.body.appendChild(link);
+
+        link.click();
+    }
   }
 }
 </script>
 
 <style>
-
 </style>
