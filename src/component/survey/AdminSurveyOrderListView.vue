@@ -95,7 +95,7 @@ import { instanceWithAuth } from '../../api/index'
 export default {
   data(){
     return {
-      totalPages: 100,
+      totalPages: 0,
       startPage: 1,
       endPage: 10,
       currentPage : 1,
