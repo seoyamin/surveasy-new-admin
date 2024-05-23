@@ -52,7 +52,15 @@
         </tr>
       </tbody>
     </table>
-    <button v-for="i in totalPages" :key="i" @click="loadMoreSurveys(i-1)">{{i}}</button>
+    <button @click="prevPageSet" :disabled="startPage === 1">이전</button>
+    <button class="page-btn"
+      v-for="i in displayedPages" 
+      :key="i" 
+      @click="loadMoreSurveys(i-1)" 
+      :class="{ active: currentPage === i }">
+      {{ i }}
+    </button>
+    <button @click="nextPageSet" :disabled="endPage >= totalPages">다음</button>
   </div>
   
   <div v-if="editModal == true" class="edit-modal">
@@ -88,6 +96,9 @@ export default {
   data(){
     return {
       totalPages: 0,
+      startPage: 1,
+      endPage: 10,
+      currentPage : 1,
       progressList : [
         { name: 0, value: 0},
         { name: 2, value: 2},
@@ -108,6 +119,18 @@ export default {
       editModalNotice : false,
     }
   },
+  computed: {
+    displayedPages() {
+      const pages = [];
+      console.log(this.startPage, this.endPage, this.totalPages)
+      for (let i = this.startPage; i <= Math.min(this.endPage, this.totalPages); i++) {
+        
+        pages.push(i);
+      }
+      console.log(pages)
+      return pages;
+    },
+  },
   mounted(){
     this.listAdminSurveys()
   },
@@ -118,6 +141,7 @@ export default {
         const response = await instanceWithAuth.get("/survey/admin?page=0")
         this.surveyList = response.data.surveyList
         this.totalPages = response.data.pageInfo.totalPages
+        this.updatePageRange()
       }catch(error) {
         console.log(error)
       }
@@ -128,8 +152,28 @@ export default {
       try {
         const response = await instanceWithAuth.get("/survey/admin?page=" + i)
         this.surveyList = response.data.surveyList
+        this.currentPage = i+1
       } catch(err) {
         console.log(err)
+      }
+    },
+
+    updatePageRange() {
+      const rangeSize = 10;
+      const currentRangeStart = Math.floor(this.currentPage / rangeSize) * rangeSize + 1;
+      this.startPage = currentRangeStart;
+      this.endPage = Math.min(currentRangeStart + rangeSize - 1, this.totalPages);
+    },
+    prevPageSet() {
+      if (this.startPage > 1) {
+        this.startPage -= 10;
+        this.endPage = this.startPage + 9;
+      }
+    },
+    nextPageSet() {
+      if (this.endPage < this.totalPages) {
+        this.startPage += 10;
+        this.endPage = Math.min(this.startPage + 9, this.totalPages);
       }
     },
 
@@ -157,7 +201,8 @@ export default {
 
     moveToResposneListPage(surveyId) {
       const paramToPass = { 'id' : surveyId }
-      this.$router.push({ name : 'AdminResponse', params: {'id' : paramToPass.id}})
+      const routeData = this.$router.resolve({ name : 'AdminResponse', params: {'id' : paramToPass.id}})
+      window.open(routeData.href, '_blank');
     },
 
     async updateStatus(item) {
@@ -286,5 +331,14 @@ export default {
   color: rgb(199, 16, 16);
   font-size: 13px;
   margin-bottom: 20px;
+}
+.page-btn {
+  margin-top: 10px;
+  margin-bottom: 50px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+.page-btn.active{
+  background-color: rgb(116, 163, 116);
 }
 </style>
