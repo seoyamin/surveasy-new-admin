@@ -37,7 +37,15 @@
       </tr>
     </tbody>
   </table>
-  <button v-for="i in totalPages" :key="i" @click="loadMorePanels(i-1)">{{i}}</button>
+  <button @click="prevPageSet" :disabled="startPage === 1">이전</button>
+    <button class="page-btn"
+      v-for="i in displayedPages" 
+      :key="i" 
+      @click="loadMorePanels(i-1)" 
+      :class="{ active: currentPage === i }">
+      {{ i }}
+    </button>
+    <button @click="nextPageSet" :disabled="endPage >= totalPages">다음</button>
 </template>
 
 <script>
@@ -45,10 +53,25 @@ import { instanceWithAuth } from '../../api/index'
 export default {
   data(){
     return {
-      totalPages : 0,
+      totalPages: 0,
+      startPage: 1,
+      endPage: 10,
+      currentPage : 1,
       panelList : [],
       jsonPanelList: []
     }
+  },
+  computed: {
+    displayedPages() {
+      const pages = [];
+      console.log(this.startPage, this.endPage, this.totalPages)
+      for (let i = this.startPage; i <= Math.min(this.endPage, this.totalPages); i++) {
+        
+        pages.push(i);
+      }
+      console.log(pages)
+      return pages;
+    },
   },
   mounted(){
     this.listAdminPanels()
@@ -59,6 +82,7 @@ export default {
         const response = await instanceWithAuth.get("/panel/admin?page=0")
         this.panelList = response.data.panelList
         this.totalPages = response.data.pageInfo.totalPages
+        this.updatePageRange()
       }catch(error) {
         console.log(error)
       }
@@ -68,10 +92,12 @@ export default {
       try {
         const response = await instanceWithAuth.get("/panel/admin?page=" + i)
         this.panelList = response.data.panelList
+        this.currentPage = i+1
       } catch(err) {
         console.log(err)
       }
     },
+
 
     async csvDownload() {
       try {
@@ -110,7 +136,26 @@ export default {
         document.body.appendChild(link);
 
         link.click();
-    }
+    },
+
+    updatePageRange() {
+      const rangeSize = 10;
+      const currentRangeStart = Math.floor(this.currentPage / rangeSize) * rangeSize + 1;
+      this.startPage = currentRangeStart;
+      this.endPage = Math.min(currentRangeStart + rangeSize - 1, this.totalPages);
+    },
+    prevPageSet() {
+      if (this.startPage > 1) {
+        this.startPage -= 10;
+        this.endPage = this.startPage + 9;
+      }
+    },
+    nextPageSet() {
+      if (this.endPage < this.totalPages) {
+        this.startPage += 10;
+        this.endPage = Math.min(this.startPage + 9, this.totalPages);
+      }
+    },
   }
 }
 </script>
