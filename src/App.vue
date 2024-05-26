@@ -15,6 +15,11 @@
           <div id="admin-main-navigator-item-option"><router-link to="/admin/panel">패널 관리</router-link></div>
         </div>
         <div class="admin-main-navigator-item">
+          <div id="admin-main-navigator-item-title">Search</div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/search/survey">설문 검색</router-link></div>
+          <div id="admin-main-navigator-item-option"><router-link to="/admin/search/panel">패널 검색</router-link></div>
+        </div>
+        <div class="admin-main-navigator-item">
           <div id="admin-main-navigator-item-title">Coupon</div>
           <div id="admin-main-navigator-item-option"><router-link to="/admin/coupon">쿠폰 관리</router-link></div>
         </div>
