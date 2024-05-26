@@ -5,6 +5,8 @@ import AdminAggregation from '../view/aggregation/AdminAggregationView.vue'
 import AdminPanel from '../view/panel/AdminPanelView.vue'
 import AdminCoupon from '../view/coupon/AdminCouponView.vue'
 import AdminReview from '../view/review/AdminReviewView.vue'
+import AdminSearchSurveyView from '../view/search/AdminSearchSurveyView.vue'
+import AdminSearchPanelView from '../view/search/AdminSearchPanelView.vue'
 
 const routes = [
   {
@@ -46,6 +48,16 @@ const routes = [
     path:'/admin/panel',
     name: 'AdminPanel',
     component: AdminPanel
+  },
+  {
+    path:'/admin/search/survey',
+    name: 'AdminSearchSurvey',
+    component: AdminSearchSurveyView
+  },
+  {
+    path:'/admin/search/panel',
+    name: 'AdminSearchPanel',
+    component: AdminSearchPanelView
   },
   {
     path: '/admin/coupon',
