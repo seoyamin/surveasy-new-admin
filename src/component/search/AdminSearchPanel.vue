@@ -4,6 +4,7 @@
       <input type="text" class="search-input" v-model="panelInput">
       <button class="search-finBtn" @click="showResult">패널 검색</button>
     </div>
+    <p>이름 / 이메일 / 전화번호로 검색 가능</p>
     <table class="admin-view-table">
     <thead>
       <tr>
@@ -39,20 +40,41 @@
       </tr>
     </tbody>
   </table>
+  <p v-if="this.inputEmpty">검색어를 다시 입력해주세요.</p>
   </div>
 </template>
 
 <script>
+import { instanceWithAuth } from '../../api/index'
 export default {
   data() {
     return{
-      panelInput : ""
+      panelInput : "",
+      panelList : [],
+      inputEmpty : false
     }
   },
 
   methods: {
-    showResult(){
-      console.log(this.panelInput)
+    async showResult(){
+      if(this.panelInput.trim().length == 0){
+        this.inputEmpty = true
+        this.panelList = []
+      }else{
+        this.inputEmpty = false
+        try{
+          const response = await instanceWithAuth.get("/panel/admin", {
+            params: {
+              page: 0,
+              keyword: this.panelInput.trim()
+            }
+          })
+          this.panelList = response.data.panelList
+        }catch(error) {
+          console.log(error)
+        }
+      }
+      
     }
   }
 
