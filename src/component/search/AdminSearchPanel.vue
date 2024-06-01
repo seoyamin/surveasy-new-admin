@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="search-panel-container">
     <div class="input-container">
       <input type="text" class="search-input" v-model="panelInput">
       <button class="search-finBtn" @click="showResult">패널 검색</button>
     </div>
-    <p>이름 / 이메일 / 전화번호로 검색 가능</p>
+    <p>이름 / 이메일 / 전화번호로 검색</p>
     <table class="admin-view-table">
     <thead>
       <tr>
@@ -41,6 +41,15 @@
     </tbody>
   </table>
   <p v-if="this.inputEmpty">검색어를 다시 입력해주세요.</p>
+  <button @click="prevPageSet" :disabled="startPage === 1">이전</button>
+    <button class="page-btn"
+      v-for="i in displayedPages" 
+      :key="i" 
+      @click="loadMorePanels(i-1)" 
+      :class="{ active: currentPage === i }">
+      {{ i }}
+    </button>
+    <button @click="nextPageSet" :disabled="endPage >= totalPages">다음</button>
   </div>
 </template>
 
@@ -49,9 +58,25 @@ import { instanceWithAuth } from '../../api/index'
 export default {
   data() {
     return{
+      totalPages: 0,
+      startPage: 1,
+      endPage: 10,
+      currentPage : 1,
       panelInput : "",
       panelList : [],
       inputEmpty : false
+    }
+  },
+  computed: {
+    displayedPages() {
+      const pages = [];
+      console.log(this.startPage, this.endPage, this.totalPages)
+      for (let i = this.startPage; i <= Math.min(this.endPage, this.totalPages); i++) {
+        
+        pages.push(i);
+      }
+      console.log(pages)
+      return pages;
     }
   },
 
@@ -70,18 +95,61 @@ export default {
             }
           })
           this.panelList = response.data.panelList
+          this.totalPages = response.data.pageInfo.totalPages
+          this.currentPage = 1
+          this.updatePageRange()
+          if(this.panelList.length == 0){
+            alert("검색 결과가 없습니다.")
+          }
         }catch(error) {
           console.log(error)
         }
       }
-      
-    }
+    },
+    async loadMorePanels(i) {
+      try {
+        const response = await instanceWithAuth.get("/panel/admin", {
+          params: {
+              page: i,
+              keyword: this.panelInput.trim()
+            }
+        })
+        this.panelList = response.data.panelList
+        this.currentPage = i+1
+      } catch(err) {
+        console.log(err)
+      }
+    },
+    updatePageRange() {
+      const rangeSize = 10;
+      const currentRangeStart = Math.floor(this.currentPage / rangeSize) * rangeSize + 1;
+      this.startPage = currentRangeStart;
+      this.endPage = Math.min(currentRangeStart + rangeSize - 1, this.totalPages);
+    },
+    prevPageSet() {
+      if (this.startPage > 1) {
+        this.startPage -= 10;
+        this.endPage = this.startPage + 9;
+      }
+    },
+    nextPageSet() {
+      if (this.endPage < this.totalPages) {
+        this.startPage += 10;
+        this.endPage = Math.min(this.startPage + 9, this.totalPages);
+      }
+    },
   }
 
 }
 </script>
 
 <style>
+.search-panel-container{
+  flex: 1; /* 컨텐츠 영역을 가능한 만큼 확장 */
+  overflow-y: auto; /* 수직 오버플로우를 자동으로 스크롤 */
+  padding: 10px; /* 컨텐츠 여백 */
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+}
 .input-container{
   display: flex;
   flex-direction: row;
