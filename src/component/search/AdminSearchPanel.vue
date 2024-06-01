@@ -145,10 +145,10 @@ export default {
 
 <style>
 .search-panel-container{
-  flex: 1; /* 컨텐츠 영역을 가능한 만큼 확장 */
-  overflow-y: auto; /* 수직 오버플로우를 자동으로 스크롤 */
-  padding: 10px; /* 컨텐츠 여백 */
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+  flex: 1; 
+  overflow-y: auto; 
+  padding: 10px; 
+  box-sizing: border-box; 
 }
 .input-container{
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="search-survey-container">
     <div class="input-container">
       <input type="text" class="search-input" v-model="surveyInput">
       <button class="search-finBtn" @click="showResult">설문 검색</button>
@@ -161,5 +161,10 @@ export default {
 </script>
 
 <style>
-
+.search-survey-container{
+  flex: 1; 
+  overflow-y: auto; 
+  padding: 10px; 
+  box-sizing: border-box; 
+}
 </style>
