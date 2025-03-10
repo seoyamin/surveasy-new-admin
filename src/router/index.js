@@ -22,11 +22,7 @@ const routes = [
   {
     path: '/admin/survey/:id',
     name: 'AdminSurveyDetail',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../view/survey/AdminSurveyDetailView.vue'),
-    // true로 설정하면 데이터를 props로도 받습니다.
+    component: () => import('../view/survey/AdminSurveyDetailView.vue'),
     props: true,
   },
   {
