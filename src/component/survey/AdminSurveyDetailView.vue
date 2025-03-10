@@ -1,5 +1,7 @@
 <template>
-    <button @click="openModal()">수정하기</button>
+<div v-if="!detailedSurvey">로딩 중...</div>
+<div v-else>
+  <button @click="openModal()">수정하기</button>
         <!-- Modal -->
 
     <div v-if="editModal" class="edit-modal">
@@ -167,6 +169,10 @@
           <td><p>{{detailedSurvey.email}}</p></td>
         </tr>
         <tr>
+          <td id="admin-survey-detail-table-title">전화번호</td>
+          <td><p>{{userInfo.phoneNumber}}</p></td>
+        </tr>
+        <tr>
           <td id="admin-survey-detail-table-title">선택 신분</td>
           <td><p>{{this.$store.state.maps.surveyIdentityMap[detailedSurvey.identity]}}</p></td>
         </tr>
@@ -177,82 +183,96 @@
       </tbody>
     </table>
   </div>
-  
+</div> 
 </template>
 
 <script>
-import { instanceWithAuth } from '../../api/index'
+import { instanceWithAuth } from '../../api/index';
 import { mapState } from 'vuex';
+
 export default {
   name: "SurveyDetail",
   computed: {
     ...mapState(['surveyStatusMap']),
   },
-  data(){
+  data() {
     return {
-      survey : null,
-      detailedSurvey : this.$store.state.surveyToPass,
+      survey: null,
+      detailedSurvey: null,
+      userInfo: null,
       editDueDate: {
-        dueDate: this.$store.state.surveyToPass.dueDate.substring(0, 10),
-        dueTime: this.$store.state.surveyToPass.dueDate.substring(11, 16)
+        dueDate: '',
+        dueTime: ''
       },
       editInfo: {
-        reward : this.$store.state.surveyToPass.reward,
-        notice: this.$store.state.surveyToPass.notice,
-        noticeToPanel: this.$store.state.surveyToPass.noticeToPanel,
-        link: this.$store.state.surveyToPass.link,
-        dueDate: this.$store.state.surveyToPass.dueDate,
-        headCount: this.$store.state.surveyToPass.headCount
+        reward: '',
+        notice: '',
+        noticeToPanel: '',
+        link: '',
+        dueDate: '',
+        headCount: ''
       },
-      editModal : false,
-      editModalNotice : false,
-    }
-  },
-  created() {
-    
+      editModal: false,
+      editModalNotice: false,
+    };
   },
 
-  methods : {
+  async mounted() {
+    const surveyId = this.$route.params.id;
+    if (surveyId) {
+      await this.loadSurvey(surveyId);
+    }
+  },
+
+  methods: {
     openModal() {
       this.editModal = true;
-      console.log(this.editDueDate)
+      console.log(this.editDueDate);
     },
 
     closeModal() {
       this.editModal = false;
     },
 
-    async updateSurvey(id) {
+    async loadSurvey(id) {
       try {
-        console.log(id)
-        this.editInfo.dueDate = this.editDueDate.dueDate + "T" + this.editDueDate.dueTime + "Z"
-        console.log(this.editInfo)
-        await instanceWithAuth.patch(
-          `/survey/admin/${id}`,
-          this.editInfo
-        )
-        // await this.loadSurvey(id);
-        this.closeModal();
+        const response = await instanceWithAuth.get(`/survey/admin/${id}`);
+        console.log(response);
+
+        this.detailedSurvey = response.data.survey;
+        this.userInfo = response.data.userInfo;
+        this.editDueDate.dueDate = this.detailedSurvey.dueDate.substring(0, 10);
+        this.editDueDate.dueTime = this.detailedSurvey.dueDate.substring(11, 16);
+
+        this.editInfo = {
+          reward: this.detailedSurvey.reward,
+          notice: this.detailedSurvey.notice,
+          noticeToPanel: this.detailedSurvey.noticeToPanel,
+          link: this.detailedSurvey.link,
+          dueDate: this.detailedSurvey.dueDate,
+          headCount: this.detailedSurvey.headCount
+        };
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 
-    async loadSurvey(id) {
+    async updateSurvey(id) {
       try {
-        this.survey = await instanceWithAuth.get(
-          `/survey/admin/${id}`
-        )
-        console.log(this.survey)
-        this.detailedSurvey = this.survey
-        this.$store.state.surveyToPass = this.survey
+        console.log(id);
+        this.editInfo.dueDate = this.editDueDate.dueDate + "T" + this.editDueDate.dueTime + "Z";
+        console.log(this.editInfo);
+        await instanceWithAuth.patch(`/survey/admin/${id}`, this.editInfo);
+        await this.loadSurvey(id); // 수정 후 최신 데이터 다시 불러오기
+        this.closeModal();
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   }
 };
 </script>
+
 
 <style>
 .admin-survey-detail-container {

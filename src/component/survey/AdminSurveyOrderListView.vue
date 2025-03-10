@@ -33,6 +33,7 @@
               <option :value="String('DONE')" >완료 (3)</option>
               <option :value="String('REFUND_PARTIAL')" >부분 환불 (4)</option>
               <option :value="String('REFUND_ALL')" >전체 환불 (5)</option>
+              <option :value="String('CANNOT')" >진행 불가 (6)</option>
             </select>
           </td>
           <td style="cursor:pointer;" @click="moveToResposneListPage(item.id)">{{item.responseCount}} / {{item.headCount.substring(5)}}</td>

@@ -16,10 +16,10 @@ export default createStore({
         "KAKAO": "카카오톡", "EVERYTIME": "에브리타임", "INSTAGRAM": "인스타그램", "ACQUAINTANCE":"지인추천", "ETC": "기타"
       },
       surveyStatusNumberMap: {
-        "CREATED" : 0, "WAITING" : 1, "IN_PROGRESS" : 2, "DONE" : 3
+        "CREATED" : 0, "WAITING" : 1, "IN_PROGRESS" : 2, "DONE" : 3, "REFUND_PARTIAL": 4, "REFUND_ALL" : 5, "CANNOT": 6
       },
       surveyStatusMap: {
-        "CREATED" : "주문 완료", "WAITING" : "검수 대기", "IN_PROGRESS" : "진행중", "DONE" : "완료"
+        "CREATED" : "주문 완료", "WAITING" : "검수 대기", "IN_PROGRESS" : "응답 수집중", "DONE" : "응답 수집 완료", "REFUND_PARTIAL": "부분 환불", "REFUND_ALL" : "전체 환불", "CANNOT": "진행 불가"
       },
       surveySpendTimeMap: {
         "TIME_0" : "1분 이내", "TIME_1_3" : "1~3분", "TIME_4_6" : '4~6분', "TIME_7_10" : '7~10분', "TIME_11_15" : '11~15분', "TIME_16_20" : '16~20분'
