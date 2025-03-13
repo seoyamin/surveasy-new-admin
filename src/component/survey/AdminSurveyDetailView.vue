@@ -66,7 +66,7 @@
           </select>
         
         <div>
-          <button id="edit-fin-btn" @click="updateSurvey(detailedSurvey.id)">수정 완료</button>
+          <button id="edit-fin-btn" @click="updateSurvey(this.$route.params.id)">수정 완료</button>
         </div>
         
       </div> 
@@ -245,6 +245,7 @@ export default {
         this.editDueDate.dueTime = this.detailedSurvey.dueDate.substring(11, 16);
 
         this.editInfo = {
+          status: this.detailedSurvey.status,
           reward: this.detailedSurvey.reward,
           notice: this.detailedSurvey.notice,
           noticeToPanel: this.detailedSurvey.noticeToPanel,
@@ -265,6 +266,7 @@ export default {
         await instanceWithAuth.patch(`/survey/admin/${id}`, this.editInfo);
         await this.loadSurvey(id); // 수정 후 최신 데이터 다시 불러오기
         this.closeModal();
+        alert("수정이 완료되었습니다")
       } catch (error) {
         console.log(error);
       }
